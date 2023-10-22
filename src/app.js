@@ -23,35 +23,102 @@ const PLAYERS = [
 
 // initialize players with image and strength
 const initPlayers = (players) => {
-    let detailedPlayers = '';
+    let detailedPlayers = [];
+    // var score=document.getElementById("score")
+    let hero=0
+    let villan=0
+    let hero1=parseInt(sessionStorage.getItem('item')) || 0
+    let villan1=parseInt(sessionStorage.getItem('item2')) || 0
+    var heropoint=document.querySelector(".hero-point")
+    var villanpoint=document.querySelector(".villan-point")
+    
 
-    // Instead of forloop use Map method
-    // Code here
 
-    return detailedPlayers;
+
+    var heroes = document.querySelector("#heroes");
+    for (let i = 0; i < players.length; i++) {
+        const player = {
+            name: players[i],
+            strength: getRandomStrength(),
+            image: `./images/super-${i+1}.png`,
+            type: i % 2 === 0 ? 'hero' : 'villain'
+        };
+        detailedPlayers.push(player);
+
+
+        
+        if (i % 2 == 0 ){
+            hero+=player.strength
+        }
+        else{
+            villan+=player.strength
+        }
+        
+        
+    }
+    if (hero>villan){
+        hero1+=1
+        sessionStorage.setItem('item',hero1)
+    }
+    else{
+        villan1+=1
+        sessionStorage.setItem('item2',villan1)
+    }
+    heropoint.innerHTML=hero1
+    villanpoint.innerHTML=villan1
+
+        
+
+
+    return detailedPlayers
+
 }
+
 
 // getting random strength
 const getRandomStrength = () => {
-    return Math.ceil(Math.random() * 100);
+    // Return a random integer (0,100]
+    // Note: You can use Math.random() and Math.ceil()
+    var strength= Math.ceil(Math.random() * 100);
+    return strength
 }
+getRandomStrength()
 
-// Build player template
 const buildPlayers = (players, type) => {
     let fragment = '';
-
-    // Instead of using for loop
-    // Use chaining of Array methods - filter, map and join
+    hero=0
+    // Loop through players and accumulate HTML template
+    // depending of type of player(hero|villain)
     // Type your code here
+    for (let i = 0; i < players.length; i++) {
+        fragment += `<div class="player">
+            <img src="${players[i].image}" alt="">
+            
+                <div class="name">${players[i].name}</div>
+                <div class="strength">${players[i].strength}</div>
+
+                </div>`;
+            }
 
     return fragment;
 }
 
-// Display players in HTML
+
+
+
 const viewPlayers = (players) => {
-    document.getElementById('heroes').innerHTML = buildPlayers(players, 'hero');
-    document.getElementById('villains').innerHTML = buildPlayers(players, 'villain');
+    // console.log(players)
+    const heroesContainer = document.getElementById('heroes');
+    const villainsContainer = document.getElementById('villains');
+
+    const heroes = players.filter(player => player.type === 'hero')
+    const villains = players.filter(player => player.type === 'villain');
+
+    heroesContainer.innerHTML = buildPlayers(heroes);
+    villainsContainer.innerHTML = buildPlayers(villains);
+
 }
+
 
 
 window.onload = () => {
